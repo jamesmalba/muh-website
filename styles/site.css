@@ -374,6 +374,92 @@ body[data-theme="green"] .theme-toggle__icon {
   color: #c4b550;
 }
 
+body[data-theme="newspaper"] {
+  --gd-bg: #fafafa;
+  --gd-panel: #f0f0f0;
+  --gd-panel-alt: #e8e8e8;
+  --gd-border-hi: #2a2722;
+  --gd-border-lo: #ddd;
+  --gd-text: #2a2722;
+  --gd-text-dim: #666;
+  --gd-accent: #2a2722;
+  --gd-link: #2a2722;
+  background: #fafafa;
+}
+
+body[data-theme="newspaper"] .theme-toggle__icon {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] nav a.active-link {
+  color: #000;
+  background: #e8e8e8;
+}
+
+body[data-theme="newspaper"] .hero-copy h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(30px, 4.5vw, 48px);
+}
+
+body[data-theme="newspaper"] .button-link {
+  color: #2a2722;
+  background: #fafafa;
+  border: 1px solid #2a2722;
+}
+
+body[data-theme="newspaper"] .button-link:hover {
+  background: #2a2722;
+  color: #fafafa;
+}
+
+body[data-theme="newspaper"] .project-preview {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+body[data-theme="newspaper"] .project-preview:hover {
+  background: #e8e8e8;
+}
+
+body[data-theme="newspaper"] .project-card .project-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .skills-grid span {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .marquee-track span {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .hero-avatar img {
+  filter: grayscale(1);
+}
+
+body[data-theme="newspaper"] .window::before,
+body[data-theme="newspaper"] .titlebar,
+body[data-theme="newspaper"] legend {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .hero-copy h1 .char {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .project-card .project-title {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .timeline-head {
+  color: #2a2722;
+}
+
 @media (max-width: 860px) {
   .hero-grid {
     grid-template-columns: 1fr;
