@@ -290,21 +290,6 @@ const initThemeToggle = () => {
   });
 };
 
-const initProjectScroller = () => {
-  const track = document.querySelector("#projectsTrack");
-  const prev = document.querySelector("#projectsPrev");
-  const next = document.querySelector("#projectsNext");
-
-  if (!track || !prev || !next) return;
-
-  const amount = 320;
-  prev.addEventListener("click", () => {
-    track.scrollBy({ left: -amount, behavior: "smooth" });
-  });
-  next.addEventListener("click", () => {
-    track.scrollBy({ left: amount, behavior: "smooth" });
-  });
-};
 
 const initMarquee = () => {
   const track = document.querySelector("[data-marquee]");

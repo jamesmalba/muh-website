@@ -10,6 +10,10 @@
   --gd-link: #b8a040;
 }
 
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
 body {
   min-height: 100vh;
 }
@@ -33,9 +37,8 @@ body {
 }
 
 nav {
-  position: sticky;
-  top: 10px;
   z-index: 20;
+  max-width: 780px;
 }
 
 nav .nav-right {
@@ -63,9 +66,6 @@ nav button {
   display: block;
 }
 
-.window {
-  max-width: 1020px;
-}
 
 .hero-window {
   padding-top: 12px;
@@ -173,49 +173,34 @@ nav button {
   margin: 0 12px 12px;
 }
 
-.project-controls {
+.projects-list {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin: 0 12px 10px;
-}
-
-.project-controls button {
-  min-width: 90px;
-}
-
-.projects-track {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(270px, 1fr));
+  flex-direction: column;
   gap: 10px;
-  overflow-x: auto;
-  padding: 10px;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
+  padding: 0 10px 10px;
 }
 
 .project-card {
-  scroll-snap-align: start;
+  display: flex;
+  gap: 16px;
   margin: 0;
-  min-width: 260px;
+  align-items: stretch;
 }
 
-.project-card header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 8px;
+.project-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .project-card .project-title {
-  margin: 0;
+  margin: 0 0 4px;
   font-weight: 700;
   color: #fff;
+  font-size: 15px;
 }
 
 .project-card .project-tagline {
-  margin-top: 0;
+  margin: 0 0 8px;
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 0.6px;
@@ -223,9 +208,35 @@ nav button {
 }
 
 .project-card .project-stack {
-  margin-top: 14px;
+  margin-top: 10px;
   color: var(--gd-accent);
   font-size: 12px;
+}
+
+.project-preview {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  border-left: solid 1px var(--gd-border-hi);
+  border-right: solid 1px var(--gd-border-lo);
+  background: var(--gd-panel-alt);
+  transition: background 0.2s;
+}
+
+.project-preview:hover {
+  background: var(--gd-panel);
+}
+
+.project-placeholder {
+  color: var(--gd-text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .timeline {
@@ -245,7 +256,7 @@ nav button {
 .skills-grid {
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -265,6 +276,70 @@ nav button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.taiko-game {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.taiko-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--gd-text-dim);
+  letter-spacing: 0.5px;
+}
+
+.taiko-pattern {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.taiko-note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.taiko-red {
+  background: #c0392b;
+  color: #fff;
+}
+
+.taiko-blue {
+  background: #2980b9;
+  color: #fff;
+}
+
+.taiko-note.taiko-hit {
+  transform: scale(1.25);
+  opacity: 0.4;
+}
+
+.taiko-key {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.taiko-status {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gd-text);
+  letter-spacing: 0.5px;
 }
 
 .char {
