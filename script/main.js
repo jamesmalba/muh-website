@@ -12,7 +12,6 @@ const initBgCanvas = () => {
   const ISO_H = 3;
   let cols, rows, grid, next, fade, ripple, age;
   let mouseX = -1, mouseY = -1;
-  let scrollY = 0;
   let time = 0;
 
   const resize = () => {
@@ -138,10 +137,9 @@ const initBgCanvas = () => {
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const colors = getThemeColors();
-    const driftX = Math.sin(time * 0.0003) * 8;
-    const driftY = scrollY * 0.05 + Math.cos(time * 0.0002) * 5;
-
     // mouse glow radius
+    const driftX = Math.sin(time * 0.0003) * 4;
+    const driftY = Math.cos(time * 0.0002) * 3;
     const MOUSE_R = 120;
     const MOUSE_R2 = MOUSE_R * MOUSE_R;
 
@@ -236,8 +234,6 @@ const initBgCanvas = () => {
     mouseX = -1;
     mouseY = -1;
   });
-  window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
-
   resize();
   window.addEventListener("resize", resize);
   requestAnimationFrame(loop);
