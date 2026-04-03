@@ -470,86 +470,235 @@ const initEasterEgg = () => {
   const marqueeShell = document.querySelector(".marquee-shell");
   if (!restoreBtn || !heroWindow || !altHero || !marqueeShell) return;
 
-  const PATTERNS = [
-    ["F","F","J","F","J","J","F","J"],
-    ["F","J","F","J","F","F","J","J"],
-    ["J","F","J","J","F","J","F","F"],
+  const SEQUENCES = [
+    ["F","J","F","J","F"],
+    ["J","F","F","J","J"],
+    ["F","F","J","J","F"],
   ];
 
-  let taikoActive = false;
-  let pattern = [];
-  let progress = 0;
+  const NOTE_SPACING = 110;
+  const SPEED = 3.2;
+  const HIT_X = 55;
+  const HIT_WINDOW = 45;
+  const NOTE_R = 16;
+  const CANVAS_H = 100;
+  const RED = "#c0392b";
+  const BLUE = "#2980b9";
+  const RED_DIM = "#7a2118";
+  const BLUE_DIM = "#1a5276";
+
+  let active = false;
+  let animId = null;
+  let canvas = null;
+  let ctx = null;
   let taikoEl = null;
+  let notes = [];
+  let statusText = "";
+  let statusColor = "";
+  let statusTimer = 0;
+  let hits = 0;
+  let totalNotes = 0;
+  let flashTime = 0;
+  let flashColor = "";
 
   const startTaiko = () => {
-    taikoActive = true;
-    pattern = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
-    progress = 0;
+    const seq = SEQUENCES[Math.floor(Math.random() * SEQUENCES.length)];
+    totalNotes = seq.length;
+    hits = 0;
+    active = true;
+    statusText = "";
+    statusTimer = 0;
+    flashTime = 0;
 
-    // replace marquee content with taiko UI
+    // build notes array — each note starts off-screen right
     const wrap = marqueeShell.querySelector(".marquee-wrap") || marqueeShell.querySelector(".inset");
+    const wrapWidth = wrap.getBoundingClientRect().width || 600;
+    notes = seq.map((key, i) => ({
+      key,
+      x: wrapWidth + 60 + i * NOTE_SPACING,
+      hit: false,
+      missed: false,
+    }));
+
+    // set up UI
     const titlebar = marqueeShell.querySelector(".titlebar");
     if (titlebar) titlebar.textContent = "Taiko Challenge";
+
+    const track = wrap.querySelector(".marquee-track");
+    if (track) track.style.display = "none";
 
     taikoEl = document.createElement("div");
     taikoEl.className = "taiko-game";
     taikoEl.innerHTML = `
       <p class="taiko-hint"><span class="taiko-key taiko-red">F</span> = Don (red) &nbsp; <span class="taiko-key taiko-blue">J</span> = Ka (blue)</p>
-      <div class="taiko-pattern">${pattern.map((k, i) =>
-        `<span class="taiko-note ${k === "F" ? "taiko-red" : "taiko-blue"}" data-i="${i}">${k}</span>`
-      ).join("")}</div>
-      <p class="taiko-status">Hit the pattern!</p>
+      <canvas class="taiko-canvas" height="${CANVAS_H}"></canvas>
+      <p class="taiko-status"></p>
     `;
-
-    wrap.style.overflow = "visible";
-    wrap.style.padding = "16px";
-    // hide marquee track
-    const track = wrap.querySelector(".marquee-track");
-    if (track) track.style.display = "none";
+    wrap.style.overflow = "hidden";
+    wrap.style.padding = "0";
     wrap.appendChild(taikoEl);
 
+    canvas = taikoEl.querySelector(".taiko-canvas");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * dpr;
+    canvas.height = CANVAS_H * dpr;
+    ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     marqueeShell.scrollIntoView({ behavior: "smooth", block: "center" });
-    window.addEventListener("keydown", onTaikoKey);
+    window.addEventListener("keydown", onKey);
+    animId = requestAnimationFrame(tick);
   };
 
-  const onTaikoKey = (e) => {
-    if (!taikoActive) return;
+  const tick = () => {
+    if (!active) return;
+    const w = canvas.offsetWidth;
+    const h = CANVAS_H;
+    const cy = h / 2;
+
+    // move notes
+    for (const n of notes) {
+      if (!n.hit) n.x -= SPEED;
+      // missed: passed the hit zone
+      if (!n.hit && !n.missed && n.x < HIT_X - HIT_WINDOW * 3) {
+        n.missed = true;
+        onMiss();
+        return; // reset happens in onMiss
+      }
+    }
+
+    // draw
+    ctx.clearRect(0, 0, w, h);
+
+    // lane line
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, cy);
+    ctx.lineTo(w, cy);
+    ctx.stroke();
+
+    // hit target
+    const pulseR = NOTE_R + 4 + Math.sin(Date.now() * 0.005) * 2;
+    ctx.beginPath();
+    ctx.arc(HIT_X, cy, pulseR, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // hit window guide
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillRect(HIT_X - HIT_WINDOW, 0, HIT_WINDOW * 2, h);
+
+    // flash feedback
+    if (flashTime > 0) {
+      flashTime -= 0.05;
+      ctx.beginPath();
+      ctx.arc(HIT_X, cy, NOTE_R + 10, 0, Math.PI * 2);
+      ctx.fillStyle = flashColor;
+      ctx.globalAlpha = flashTime * 0.6;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // notes
+    for (const n of notes) {
+      if (n.hit) continue;
+      const isRed = n.key === "F";
+      ctx.beginPath();
+      ctx.arc(n.x, cy, NOTE_R, 0, Math.PI * 2);
+      ctx.fillStyle = isRed ? RED : BLUE;
+      ctx.fill();
+      // letter
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 13px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(n.key, n.x, cy);
+    }
+
+    // status text
+    const statusEl = taikoEl.querySelector(".taiko-status");
+    if (statusEl) {
+      statusEl.textContent = statusText;
+      statusEl.style.color = statusColor;
+    }
+
+    // check completion
+    if (hits >= totalNotes) {
+      statusText = "Perfect!";
+      statusColor = "var(--gd-accent)";
+      if (statusEl) {
+        statusEl.textContent = statusText;
+        statusEl.style.color = statusColor;
+      }
+      active = false;
+      window.removeEventListener("keydown", onKey);
+      setTimeout(() => endTaiko(true), 800);
+      return;
+    }
+
+    animId = requestAnimationFrame(tick);
+  };
+
+  const onKey = (e) => {
+    if (!active) return;
     const key = e.key.toUpperCase();
     if (key !== "F" && key !== "J") return;
     e.preventDefault();
 
-    const expected = pattern[progress];
-    const notes = taikoEl.querySelectorAll(".taiko-note");
-    const statusEl = taikoEl.querySelector(".taiko-status");
-
-    if (key === expected) {
-      notes[progress].classList.add("taiko-hit");
-      progress++;
-      if (progress >= pattern.length) {
-        statusEl.textContent = "Perfect!";
-        statusEl.style.color = "var(--gd-accent)";
-        taikoActive = false;
-        window.removeEventListener("keydown", onTaikoKey);
-        setTimeout(() => endTaiko(true), 600);
+    // find the closest unhit note within the hit window
+    let best = null;
+    let bestDist = Infinity;
+    for (const n of notes) {
+      if (n.hit || n.missed) continue;
+      const dist = Math.abs(n.x - HIT_X);
+      if (dist < HIT_WINDOW && dist < bestDist) {
+        best = n;
+        bestDist = dist;
       }
+    }
+
+    if (!best) return; // no note in range
+
+    if (best.key === key) {
+      best.hit = true;
+      hits++;
+      flashTime = 1;
+      flashColor = best.key === "F" ? RED : BLUE;
+      statusText = "";
     } else {
-      // miss — flash red and reset
-      statusEl.textContent = "Miss! Try again...";
-      statusEl.style.color = "#e05050";
-      notes.forEach((n) => n.classList.remove("taiko-hit"));
-      progress = 0;
-      setTimeout(() => {
-        statusEl.textContent = "Hit the pattern!";
-        statusEl.style.color = "";
-      }, 800);
+      onMiss();
     }
   };
 
+  const onMiss = () => {
+    statusText = "Miss! Restarting...";
+    statusColor = "#e05050";
+    flashTime = 1;
+    flashColor = "#e05050";
+    active = false;
+    window.removeEventListener("keydown", onKey);
+    if (animId) cancelAnimationFrame(animId);
+
+    setTimeout(() => {
+      // restart
+      if (taikoEl) taikoEl.remove();
+      taikoEl = null;
+      const wrap = marqueeShell.querySelector(".marquee-wrap") || marqueeShell.querySelector(".inset");
+      wrap.style.overflow = "";
+      wrap.style.padding = "";
+      startTaiko();
+    }, 1000);
+  };
+
   const endTaiko = (success) => {
+    if (animId) cancelAnimationFrame(animId);
     if (taikoEl) taikoEl.remove();
     taikoEl = null;
+    canvas = null;
+    ctx = null;
 
-    // restore marquee
     const wrap = marqueeShell.querySelector(".marquee-wrap") || marqueeShell.querySelector(".inset");
     const track = wrap.querySelector(".marquee-track");
     if (track) track.style.display = "";
@@ -560,7 +709,6 @@ const initEasterEgg = () => {
     if (titlebar) titlebar.textContent = "Activity Feed";
 
     if (success) {
-      // restore everything — hero and any closed/minimized sections
       altHero.style.display = "none";
       heroWindow.style.display = "";
       document.querySelectorAll(".window:not(.headless)").forEach((w) => {
@@ -574,7 +722,7 @@ const initEasterEgg = () => {
 
   restoreBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    if (!taikoActive) startTaiko();
+    if (!active) startTaiko();
   });
 };
 
