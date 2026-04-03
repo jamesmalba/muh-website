@@ -128,10 +128,10 @@ const initBgCanvas = () => {
   ];
 
   const getThemeColors = () => {
-    const isBlack = body.dataset.theme === "black";
-    return isBlack
-      ? [hexToRgb("#F0B43F"), hexToRgb("#E08830"), hexToRgb("#D4A040"), hexToRgb("#C87020")]
-      : [hexToRgb("#c4b550"), hexToRgb("#8a9a3e"), hexToRgb("#a0a848"), hexToRgb("#7d8a30")];
+    const theme = body.dataset.theme;
+    if (theme === "black") return [hexToRgb("#F0B43F"), hexToRgb("#E08830"), hexToRgb("#D4A040"), hexToRgb("#C87020")];
+    if (theme === "newspaper") return [hexToRgb("#bdbdbd"), hexToRgb("#9e9e9e"), hexToRgb("#aaa8a3"), hexToRgb("#8a8680")];
+    return [hexToRgb("#c4b550"), hexToRgb("#8a9a3e"), hexToRgb("#a0a848"), hexToRgb("#7d8a30")];
   };
 
   const draw = () => {
@@ -264,28 +264,34 @@ const initThemeToggle = () => {
   const themeStylesheet = document.querySelector("#themeStylesheet");
   if (!themeToggle || !themeStylesheet) return;
 
-  const stored = localStorage.getItem("portfolio-theme");
-  const setTheme = (theme) => {
-    const isBlack = theme === "black";
-    themeStylesheet.setAttribute(
-      "href",
-      isBlack
-        ? "./styles/blacksteam/blacksteam.css"
-        : "./styles/greensteam/greensteam.css"
-    );
-    body.dataset.theme = isBlack ? "black" : "green";
-    themeToggle.setAttribute("aria-pressed", String(isBlack));
-    themeToggle.setAttribute(
-      "aria-label",
-      isBlack ? "Switch to green theme" : "Switch to dark theme"
-    );
-    localStorage.setItem("portfolio-theme", isBlack ? "black" : "green");
+  const THEMES = ["newspaper", "black", "green"];
+  const THEME_CSS = {
+    newspaper: "./styles/newspaper/newspaper.css",
+    black: "./styles/blacksteam/blacksteam.css",
+    green: "./styles/greensteam/greensteam.css",
+  };
+  const THEME_LABELS = {
+    newspaper: "Switch to dark theme",
+    black: "Switch to green theme",
+    green: "Switch to white theme",
   };
 
-  setTheme(stored === "black" ? "black" : "green");
+  const stored = localStorage.getItem("portfolio-theme");
+  const setTheme = (theme) => {
+    if (!THEMES.includes(theme)) theme = "newspaper";
+    themeStylesheet.setAttribute("href", THEME_CSS[theme]);
+    body.dataset.theme = theme;
+    themeToggle.setAttribute("aria-pressed", String(theme !== "newspaper"));
+    themeToggle.setAttribute("aria-label", THEME_LABELS[theme]);
+    localStorage.setItem("portfolio-theme", theme);
+  };
+
+  setTheme(THEMES.includes(stored) ? stored : "newspaper");
 
   themeToggle.addEventListener("click", () => {
-    const nextTheme = body.dataset.theme === "black" ? "green" : "black";
+    const current = body.dataset.theme;
+    const idx = THEMES.indexOf(current);
+    const nextTheme = THEMES[(idx + 1) % THEMES.length];
     setTheme(nextTheme);
   });
 };
