@@ -1,6 +1,108 @@
 const body = document.body;
 body.classList.add("has-js");
 
+const initBgCanvas = () => {
+  const canvas = document.getElementById("bgCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  const CELL = 6;
+  const GAP = 2;
+  const STEP = CELL + GAP;
+  let cols, rows, grid, next, fade;
+
+  const resize = () => {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(window.innerWidth / STEP) + 2;
+    rows = Math.ceil(window.innerHeight / STEP) + 2;
+    grid = new Uint8Array(cols * rows);
+    next = new Uint8Array(cols * rows);
+    fade = new Float32Array(cols * rows);
+    seed();
+  };
+
+  const seed = () => {
+    for (let i = 0; i < grid.length; i++) {
+      grid[i] = Math.random() < 0.12 ? 1 : 0;
+      fade[i] = grid[i] ? 1.0 : 0;
+    }
+  };
+
+  const neighbors = (x, y) => {
+    let count = 0;
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        if (dx === 0 && dy === 0) continue;
+        const nx = (x + dx + cols) % cols;
+        const ny = (y + dy + rows) % rows;
+        if (grid[ny * cols + nx]) count++;
+      }
+    }
+    return count;
+  };
+
+  const step = () => {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const i = y * cols + x;
+        const n = neighbors(x, y);
+        const alive = grid[i];
+        if (alive) {
+          next[i] = (n === 2 || n === 3) ? 1 : 0;
+        } else {
+          next[i] = (n === 3) ? 1 : 0;
+        }
+        if (next[i]) {
+          fade[i] = Math.min(fade[i] + 0.15, 1.0);
+        } else {
+          fade[i] = Math.max(fade[i] - 0.04, 0);
+        }
+      }
+    }
+    [grid, next] = [next, grid];
+  };
+
+  const getColors = () => {
+    const isBlack = body.dataset.theme === "black";
+    return isBlack
+      ? ["#F0B43F", "#E08830", "#D4A040"]
+      : ["#c4b550", "#8a9a3e", "#a0a848"];
+  };
+
+  const draw = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const colors = getColors();
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const i = y * cols + x;
+        if (fade[i] <= 0.01) continue;
+        const color = colors[(x * 7 + y * 13) % colors.length];
+        ctx.globalAlpha = fade[i];
+        ctx.fillStyle = color;
+        ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
+      }
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  let frameCount = 0;
+  const loop = () => {
+    frameCount++;
+    if (frameCount % 6 === 0) step();
+    draw();
+    requestAnimationFrame(loop);
+  };
+
+  resize();
+  window.addEventListener("resize", resize);
+  requestAnimationFrame(loop);
+};
+
+initBgCanvas();
+
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
