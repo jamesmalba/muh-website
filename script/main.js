@@ -301,6 +301,42 @@ const initMarquee = () => {
   const track = document.querySelector("[data-marquee]");
   if (!track) return;
 
+  // inject dynamic info spans
+  const timeSpan = document.createElement("span");
+  timeSpan.className = "marquee-dynamic";
+  const updateTime = () => {
+    const now = new Date();
+    timeSpan.textContent = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+  };
+  updateTime();
+  setInterval(updateTime, 60000);
+
+  const locSpan = document.createElement("span");
+  locSpan.textContent = "New Brunswick, NJ";
+
+  const coordSpan = document.createElement("span");
+  coordSpan.textContent = "40.4862\u00b0 N, 74.4518\u00b0 W";
+
+  const tempSpan = document.createElement("span");
+  tempSpan.textContent = "Loading...";
+
+  fetch("https://api.open-meteo.com/v1/forecast?latitude=40.4862&longitude=-74.4518&current_weather=true&temperature_unit=fahrenheit")
+    .then((r) => r.json())
+    .then((data) => {
+      if (data.current_weather) {
+        tempSpan.textContent = `${Math.round(data.current_weather.temperature)}\u00b0F`;
+      }
+    })
+    .catch(() => { tempSpan.textContent = "--\u00b0F"; });
+
+  // insert dynamic spans among the tech skills
+  const children = [...track.children];
+  const insertAt = Math.min(3, children.length);
+  track.insertBefore(tempSpan, children[insertAt] || null);
+  track.insertBefore(coordSpan, tempSpan);
+  track.insertBefore(locSpan, coordSpan);
+  track.insertBefore(timeSpan, locSpan);
+
   const clone = track.innerHTML;
   track.insertAdjacentHTML("beforeend", clone);
 
