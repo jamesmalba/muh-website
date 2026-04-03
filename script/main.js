@@ -6,21 +6,28 @@ const initBgCanvas = () => {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  const CELL = 6;
-  const GAP = 2;
+  const CELL = 7;
+  const GAP = 3;
   const STEP = CELL + GAP;
-  let cols, rows, grid, next, fade;
+  const ISO_H = 3;
+  let cols, rows, grid, next, fade, ripple, age;
+  let mouseX = -1, mouseY = -1;
+  let scrollY = 0;
+  let time = 0;
 
   const resize = () => {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cols = Math.ceil(window.innerWidth / STEP) + 2;
-    rows = Math.ceil(window.innerHeight / STEP) + 2;
-    grid = new Uint8Array(cols * rows);
-    next = new Uint8Array(cols * rows);
-    fade = new Float32Array(cols * rows);
+    cols = Math.ceil(window.innerWidth / STEP) + 4;
+    rows = Math.ceil(window.innerHeight / STEP) + 4;
+    const len = cols * rows;
+    grid = new Uint8Array(len);
+    next = new Uint8Array(len);
+    fade = new Float32Array(len);
+    ripple = new Float32Array(len);
+    age = new Float32Array(len);
     seed();
   };
 
@@ -28,6 +35,29 @@ const initBgCanvas = () => {
     for (let i = 0; i < grid.length; i++) {
       grid[i] = Math.random() < 0.12 ? 1 : 0;
       fade[i] = grid[i] ? 1.0 : 0;
+      ripple[i] = 0;
+      age[i] = 0;
+    }
+  };
+
+  const PATTERNS = [
+    { name: "glider", cells: [[0,1],[1,2],[2,0],[2,1],[2,2]] },
+    { name: "lwss", cells: [[0,1],[0,3],[1,4],[2,0],[2,4],[3,1],[3,2],[3,3],[3,4]] },
+    { name: "rpentomino", cells: [[0,1],[0,2],[1,0],[1,1],[2,1]] },
+    { name: "pulsar_seed", cells: [[0,0],[0,1],[0,2],[1,0],[2,0],[2,1],[2,2]] },
+  ];
+
+  const spawnPattern = () => {
+    const pat = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
+    const ox = Math.floor(Math.random() * (cols - 10)) + 3;
+    const oy = Math.floor(Math.random() * (rows - 10)) + 3;
+    for (const [dy, dx] of pat.cells) {
+      const i = (oy + dy) * cols + (ox + dx);
+      if (i >= 0 && i < grid.length) {
+        grid[i] = 1;
+        fade[i] = 0.3;
+        ripple[i] = 1.0;
+      }
     }
   };
 
@@ -44,6 +74,9 @@ const initBgCanvas = () => {
     return count;
   };
 
+  const easeOut = (t) => 1 - (1 - t) * (1 - t);
+  const easeIn = (t) => t * t * t;
+
   const step = () => {
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
@@ -56,45 +89,154 @@ const initBgCanvas = () => {
           next[i] = (n === 3) ? 1 : 0;
         }
         if (next[i]) {
-          fade[i] = Math.min(fade[i] + 0.15, 1.0);
+          fade[i] = Math.min(fade[i] + 0.12, 1.0);
+          if (!alive) {
+            ripple[i] = 1.0;
+            age[i] = 0;
+          }
+          age[i] += 0.02;
         } else {
-          fade[i] = Math.max(fade[i] - 0.04, 0);
+          fade[i] = Math.max(fade[i] - 0.025, 0);
+        }
+        ripple[i] *= 0.85;
+      }
+    }
+    // ripple propagation
+    for (let y = 1; y < rows - 1; y++) {
+      for (let x = 1; x < cols - 1; x++) {
+        const i = y * cols + x;
+        if (ripple[i] > 0.3) {
+          const spread = ripple[i] * 0.15;
+          ripple[i - 1] = Math.max(ripple[i - 1], spread);
+          ripple[i + 1] = Math.max(ripple[i + 1], spread);
+          ripple[i - cols] = Math.max(ripple[i - cols], spread);
+          ripple[i + cols] = Math.max(ripple[i + cols], spread);
         }
       }
     }
     [grid, next] = [next, grid];
   };
 
-  const getColors = () => {
+  const hexToRgb = (hex) => {
+    const v = parseInt(hex.slice(1), 16);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+  };
+
+  const lerpColor = (a, b, t) => [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+
+  const getThemeColors = () => {
     const isBlack = body.dataset.theme === "black";
     return isBlack
-      ? ["#F0B43F", "#E08830", "#D4A040"]
-      : ["#c4b550", "#8a9a3e", "#a0a848"];
+      ? [hexToRgb("#F0B43F"), hexToRgb("#E08830"), hexToRgb("#D4A040"), hexToRgb("#C87020")]
+      : [hexToRgb("#c4b550"), hexToRgb("#8a9a3e"), hexToRgb("#a0a848"), hexToRgb("#7d8a30")];
   };
 
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const colors = getColors();
+    const colors = getThemeColors();
+    const driftX = Math.sin(time * 0.0003) * 8;
+    const driftY = scrollY * 0.05 + Math.cos(time * 0.0002) * 5;
+
+    // mouse glow radius
+    const MOUSE_R = 120;
+    const MOUSE_R2 = MOUSE_R * MOUSE_R;
+
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const i = y * cols + x;
-        if (fade[i] <= 0.01) continue;
-        const color = colors[(x * 7 + y * 13) % colors.length];
-        ctx.globalAlpha = fade[i];
-        ctx.fillStyle = color;
-        ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
+        const f = fade[i];
+        const r = ripple[i];
+        if (f <= 0.005 && r <= 0.005) continue;
+
+        const px = x * STEP + driftX;
+        const py = y * STEP + driftY;
+
+        // mouse proximity boost
+        let mouseBright = 0;
+        if (mouseX >= 0) {
+          const mdx = px - mouseX;
+          const mdy = py - mouseY;
+          const md2 = mdx * mdx + mdy * mdy;
+          if (md2 < MOUSE_R2) {
+            mouseBright = (1 - md2 / MOUSE_R2) * 0.4;
+          }
+        }
+
+        // color shimmer: cycle through palette over time
+        const shimmer = (time * 0.0006 + x * 0.05 + y * 0.03) % colors.length;
+        const ci = Math.floor(shimmer);
+        const cf = shimmer - ci;
+        const smoothT = cf * cf * (3 - 2 * cf); // smoothstep
+        const colA = colors[ci % colors.length];
+        const colB = colors[(ci + 1) % colors.length];
+        const col = lerpColor(colA, colB, smoothT);
+
+        // eased alpha
+        const easedFade = easeOut(Math.min(f, 1));
+        const alpha = Math.min(easedFade + r * 0.3 + mouseBright, 1);
+
+        if (alpha < 0.01) continue;
+
+        // height based on fade + ripple
+        const h = (easedFade + r * 0.5) * ISO_H;
+        const bright = 1.0 + r * 0.25 + mouseBright;
+
+        ctx.globalAlpha = alpha;
+
+        // shadow
+        if (h > 0.5) {
+          ctx.fillStyle = `rgba(0,0,0,0.18)`;
+          ctx.fillRect(px + 1, py + 1, CELL, CELL);
+        }
+
+        // top face (brightest)
+        const tr = Math.min(col[0] * bright, 255) | 0;
+        const tg = Math.min(col[1] * bright, 255) | 0;
+        const tb = Math.min(col[2] * bright, 255) | 0;
+        ctx.fillStyle = `rgb(${tr},${tg},${tb})`;
+        ctx.fillRect(px, py - h, CELL, CELL);
+
+        // right face (darker)
+        if (h > 0.5) {
+          const dr = (col[0] * 0.65) | 0;
+          const dg = (col[1] * 0.65) | 0;
+          const db = (col[2] * 0.65) | 0;
+          ctx.fillStyle = `rgb(${dr},${dg},${db})`;
+          ctx.fillRect(px, py - h + CELL, CELL, Math.ceil(h));
+        }
       }
     }
     ctx.globalAlpha = 1;
   };
 
   let frameCount = 0;
-  const loop = () => {
+  let spawnTimer = 0;
+
+  const loop = (ts) => {
+    time = ts || 0;
     frameCount++;
-    if (frameCount % 6 === 0) step();
+    if (frameCount % 6 === 0) {
+      step();
+      spawnTimer++;
+      if (spawnTimer % 30 === 0) spawnPattern();
+    }
     draw();
     requestAnimationFrame(loop);
   };
+
+  canvas.parentElement.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  canvas.parentElement.addEventListener("mouseleave", () => {
+    mouseX = -1;
+    mouseY = -1;
+  });
+  window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
 
   resize();
   window.addEventListener("resize", resize);
