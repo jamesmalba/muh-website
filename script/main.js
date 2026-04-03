@@ -365,7 +365,7 @@ const initAnimations = () => {
       "-=0.45"
     );
 
-  gsap.utils.toArray(".window, .window-row").forEach((el) => {
+  gsap.utils.toArray(".window").forEach((el) => {
     if (el.id === "top") return;
     gsap.from(el, {
       y: 20,
@@ -373,7 +373,7 @@ const initAnimations = () => {
       duration: 0.6,
       scrollTrigger: {
         trigger: el,
-        start: "top 84%",
+        start: "top 95%",
       },
     });
   });
@@ -403,9 +403,185 @@ const initActiveNav = () => {
   sections.forEach((section) => observer.observe(section));
 };
 
+const initWindowButtons = () => {
+  const windows = document.querySelectorAll(".window:not(.headless)");
+  const minimized = new Map();
+
+  windows.forEach((win) => {
+    if (win.id === "alt-hero") return;
+
+    win.addEventListener("click", (e) => {
+      const rect = win.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const style = getComputedStyle(win);
+      const padTop = parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth);
+      const padRight = parseFloat(style.paddingRight) + parseFloat(style.borderRightWidth);
+
+      // only clicks in the titlebar region (::before is 18px tall)
+      if (y < padTop || y > padTop + 18) return;
+
+      // x offset from right edge of the ::before element
+      const fromRight = rect.width - padRight - x;
+
+      // close button: 0-18px from right of ::before
+      if (fromRight >= 0 && fromRight <= 18) {
+        e.preventDefault();
+        if (win.id === "top") {
+          const altHero = document.getElementById("alt-hero");
+          if (altHero) {
+            win.style.display = "none";
+            altHero.style.display = "";
+            splitText("#alt-hero [data-split]");
+          }
+        } else {
+          win.style.display = "none";
+        }
+        return;
+      }
+
+      // minimize button: 20-38px from right of ::before
+      if (fromRight >= 20 && fromRight <= 38) {
+        e.preventDefault();
+        const content = [...win.children];
+        if (minimized.has(win)) {
+          const heights = minimized.get(win);
+          content.forEach((child, i) => {
+            child.style.display = heights[i];
+          });
+          minimized.delete(win);
+        } else {
+          const heights = content.map((child) => child.style.display);
+          minimized.set(win, heights);
+          content.forEach((child) => {
+            child.style.display = "none";
+          });
+        }
+        return;
+      }
+    });
+  });
+};
+
+const initEasterEgg = () => {
+  const restoreBtn = document.querySelector("#restore-hero");
+  const heroWindow = document.querySelector("#top");
+  const altHero = document.querySelector("#alt-hero");
+  const marqueeShell = document.querySelector(".marquee-shell");
+  if (!restoreBtn || !heroWindow || !altHero || !marqueeShell) return;
+
+  const PATTERNS = [
+    ["F","F","J","F","J","J","F","J"],
+    ["F","J","F","J","F","F","J","J"],
+    ["J","F","J","J","F","J","F","F"],
+  ];
+
+  let taikoActive = false;
+  let pattern = [];
+  let progress = 0;
+  let taikoEl = null;
+
+  const startTaiko = () => {
+    taikoActive = true;
+    pattern = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
+    progress = 0;
+
+    // replace marquee content with taiko UI
+    const wrap = marqueeShell.querySelector(".marquee-wrap") || marqueeShell.querySelector(".inset");
+    const titlebar = marqueeShell.querySelector(".titlebar");
+    if (titlebar) titlebar.textContent = "Taiko Challenge";
+
+    taikoEl = document.createElement("div");
+    taikoEl.className = "taiko-game";
+    taikoEl.innerHTML = `
+      <p class="taiko-hint"><span class="taiko-key taiko-red">F</span> = Don (red) &nbsp; <span class="taiko-key taiko-blue">J</span> = Ka (blue)</p>
+      <div class="taiko-pattern">${pattern.map((k, i) =>
+        `<span class="taiko-note ${k === "F" ? "taiko-red" : "taiko-blue"}" data-i="${i}">${k}</span>`
+      ).join("")}</div>
+      <p class="taiko-status">Hit the pattern!</p>
+    `;
+
+    wrap.style.overflow = "visible";
+    wrap.style.padding = "16px";
+    // hide marquee track
+    const track = wrap.querySelector(".marquee-track");
+    if (track) track.style.display = "none";
+    wrap.appendChild(taikoEl);
+
+    marqueeShell.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.addEventListener("keydown", onTaikoKey);
+  };
+
+  const onTaikoKey = (e) => {
+    if (!taikoActive) return;
+    const key = e.key.toUpperCase();
+    if (key !== "F" && key !== "J") return;
+    e.preventDefault();
+
+    const expected = pattern[progress];
+    const notes = taikoEl.querySelectorAll(".taiko-note");
+    const statusEl = taikoEl.querySelector(".taiko-status");
+
+    if (key === expected) {
+      notes[progress].classList.add("taiko-hit");
+      progress++;
+      if (progress >= pattern.length) {
+        statusEl.textContent = "Perfect!";
+        statusEl.style.color = "var(--gd-accent)";
+        taikoActive = false;
+        window.removeEventListener("keydown", onTaikoKey);
+        setTimeout(() => endTaiko(true), 600);
+      }
+    } else {
+      // miss — flash red and reset
+      statusEl.textContent = "Miss! Try again...";
+      statusEl.style.color = "#e05050";
+      notes.forEach((n) => n.classList.remove("taiko-hit"));
+      progress = 0;
+      setTimeout(() => {
+        statusEl.textContent = "Hit the pattern!";
+        statusEl.style.color = "";
+      }, 800);
+    }
+  };
+
+  const endTaiko = (success) => {
+    if (taikoEl) taikoEl.remove();
+    taikoEl = null;
+
+    // restore marquee
+    const wrap = marqueeShell.querySelector(".marquee-wrap") || marqueeShell.querySelector(".inset");
+    const track = wrap.querySelector(".marquee-track");
+    if (track) track.style.display = "";
+    wrap.style.overflow = "";
+    wrap.style.padding = "";
+
+    const titlebar = marqueeShell.querySelector(".titlebar");
+    if (titlebar) titlebar.textContent = "Activity Feed";
+
+    if (success) {
+      // restore everything — hero and any closed/minimized sections
+      altHero.style.display = "none";
+      heroWindow.style.display = "";
+      document.querySelectorAll(".window:not(.headless)").forEach((w) => {
+        if (w.id === "alt-hero") return;
+        w.style.display = "";
+        [...w.children].forEach((child) => { child.style.display = ""; });
+      });
+      heroWindow.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  restoreBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!taikoActive) startTaiko();
+  });
+};
+
 splitText("[data-split]");
 initThemeToggle();
-initProjectScroller();
 initMarquee();
 initAnimations();
 initActiveNav();
+initWindowButtons();
+initEasterEgg();

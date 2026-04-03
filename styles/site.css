@@ -33,6 +33,7 @@ body {
   position: relative;
   z-index: 1;
   max-width: 1020px;
+  margin: 0 auto;
   gap: 0;
 }
 
@@ -365,7 +366,7 @@ body[data-theme="black"] nav a.active-link {
 }
 
 body[data-theme="green"] {
-  background: radial-gradient(circle at 20% 0%, #50624a 0%, var(--gd-bg) 38%);
+  background: var(--gd-bg);
 }
 
 body[data-theme="black"] {
@@ -407,7 +408,12 @@ body[data-theme="green"] .theme-toggle__icon {
     display: block;
   }
 
-  .projects-track {
-    grid-template-columns: repeat(6, minmax(250px, 1fr));
+  .project-card {
+    flex-direction: column;
+  }
+
+  .project-preview {
+    width: 100%;
+    min-height: 140px;
   }
 }
