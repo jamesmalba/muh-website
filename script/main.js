@@ -264,29 +264,29 @@ const initThemeToggle = () => {
   const themeStylesheet = document.querySelector("#themeStylesheet");
   if (!themeToggle || !themeStylesheet) return;
 
-  const THEMES = ["newspaper", "black", "green"];
+  const THEMES = ["green", "newspaper", "black"];
   const THEME_CSS = {
     newspaper: "./styles/newspaper/newspaper.css",
     black: "./styles/blacksteam/blacksteam.css",
     green: "./styles/greensteam/greensteam.css",
   };
   const THEME_LABELS = {
+    green: "Switch to white theme",
     newspaper: "Switch to dark theme",
     black: "Switch to green theme",
-    green: "Switch to white theme",
   };
 
   const stored = localStorage.getItem("portfolio-theme");
   const setTheme = (theme) => {
-    if (!THEMES.includes(theme)) theme = "newspaper";
+    if (!THEMES.includes(theme)) theme = "green";
     themeStylesheet.setAttribute("href", THEME_CSS[theme]);
     body.dataset.theme = theme;
-    themeToggle.setAttribute("aria-pressed", String(theme !== "newspaper"));
+    themeToggle.setAttribute("aria-pressed", String(theme !== "green"));
     themeToggle.setAttribute("aria-label", THEME_LABELS[theme]);
     localStorage.setItem("portfolio-theme", theme);
   };
 
-  setTheme(THEMES.includes(stored) ? stored : "newspaper");
+  setTheme(THEMES.includes(stored) ? stored : "green");
 
   themeToggle.addEventListener("click", () => {
     const current = body.dataset.theme;
