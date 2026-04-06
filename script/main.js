@@ -513,9 +513,10 @@ const initEasterEgg = () => {
   if (!restoreBtn || !heroWindow || !altHero || !marqueeShell) return;
 
   const SEQUENCES = [
-    ["F","J","F","J","F"],
-    ["J","F","F","J","J"],
-    ["F","F","J","J","F"],
+    ["F","J","F"],
+    ["J","F","J"],
+    ["F","F","J"],
+    ["J","J","F"],
   ];
 
   const NOTE_SPACING = 110;
