@@ -320,6 +320,7 @@ body[data-theme="newspaper"] .topbar__icon-button:hover {
 
 .project-preview {
   width: 100%;
+  aspect-ratio: 16 / 9;
   min-height: 128px;
   display: flex;
   align-items: center;
@@ -330,11 +331,26 @@ body[data-theme="newspaper"] .topbar__icon-button:hover {
   border-left: solid 1px var(--gd-border-hi);
   border-right: solid 1px var(--gd-border-lo);
   background: var(--gd-panel-alt);
+  overflow: hidden;
   transition: background 0.2s;
 }
 
 .project-preview:hover {
   background: var(--gd-panel);
+}
+
+.project-preview.has-image {
+  padding: 0;
+}
+
+.project-preview.has-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border: 0;
+  margin: 0;
 }
 
 .project-placeholder {
