@@ -751,6 +751,25 @@ body[data-theme="newspaper"] .project-card .project-title {
   color: #2a2722;
 }
 
+body[data-theme="newspaper"] .projects-more summary,
+body[data-theme="newspaper"] .project-card-compact,
+body[data-theme="newspaper"] .project-mini-preview {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+body[data-theme="newspaper"] .projects-more summary,
+body[data-theme="newspaper"] .project-card-compact .project-title,
+body[data-theme="newspaper"] .project-mini-preview span:first-child {
+  color: #2a2722;
+}
+
+body[data-theme="newspaper"] .projects-more__count {
+  color: #2a2722;
+  background: #fafafa;
+  border: 1px solid #ddd;
+}
+
 body[data-theme="newspaper"] .skills-grid span {
   background: #f5f5f5;
   border: 1px solid #ddd;
@@ -781,6 +800,121 @@ body[data-theme="newspaper"] .project-card .project-title {
 
 body[data-theme="newspaper"] .timeline-head {
   color: #2a2722;
+}
+
+body[data-theme="moonlight"] {
+  --gd-bg: #10171a;
+  --gd-panel: rgba(24, 33, 36, 0.88);
+  --gd-panel-alt: rgba(36, 48, 52, 0.9);
+  --gd-border-hi: #71808a;
+  --gd-border-lo: #071013;
+  --gd-text: #d6d2c2;
+  --gd-text-dim: #a8b0ad;
+  --gd-accent: #d0b46f;
+  --gd-link: #dfc47d;
+  color: var(--gd-text);
+  background:
+    linear-gradient(rgba(12, 18, 21, 0.35), rgba(12, 18, 21, 0.82)),
+    url("../assets/dresden-moonlight-preview.gif") center top / cover fixed,
+    #10171a;
+}
+
+body[data-theme="moonlight"] #bgCanvas {
+  opacity: 0.2;
+  mix-blend-mode: screen;
+}
+
+body[data-theme="moonlight"] .topbar,
+body[data-theme="moonlight"] .window,
+body[data-theme="moonlight"] .box,
+body[data-theme="moonlight"] .project-card-compact {
+  background-color: var(--gd-panel);
+  border-top-color: var(--gd-border-hi);
+  border-bottom-color: var(--gd-border-lo);
+  border-left-color: var(--gd-border-hi);
+  border-right-color: var(--gd-border-lo);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(3px);
+}
+
+body[data-theme="moonlight"] .topbar__link,
+body[data-theme="moonlight"] .topbar__icon-link,
+body[data-theme="moonlight"] .topbar__icon-button {
+  color: var(--gd-accent);
+  border-left-color: rgba(113, 128, 138, 0.58);
+}
+
+body[data-theme="moonlight"] .topbar__link:hover,
+body[data-theme="moonlight"] .topbar__link:focus-visible,
+body[data-theme="moonlight"] .topbar__icon-link:hover,
+body[data-theme="moonlight"] .topbar__icon-link:focus-visible,
+body[data-theme="moonlight"] .topbar__icon-button:hover,
+body[data-theme="moonlight"] .topbar__icon-button:focus-visible,
+body[data-theme="moonlight"] nav a.active-link {
+  color: #f0dfaa;
+  background: rgba(61, 80, 87, 0.82);
+}
+
+body[data-theme="moonlight"] .hero-copy h1 .char,
+body[data-theme="moonlight"] .hero-role,
+body[data-theme="moonlight"] .project-card .project-title,
+body[data-theme="moonlight"] .project-card-compact .project-title,
+body[data-theme="moonlight"] .timeline-head {
+  color: #f0ead6;
+}
+
+body[data-theme="moonlight"] .button-link,
+body[data-theme="moonlight"] .projects-more__count {
+  color: #f0dfaa;
+  background: rgba(17, 25, 28, 0.88);
+  border-top-color: var(--gd-border-hi);
+  border-bottom-color: var(--gd-border-lo);
+  border-left-color: var(--gd-border-hi);
+  border-right-color: var(--gd-border-lo);
+}
+
+body[data-theme="moonlight"] .button-link:hover {
+  color: #10171a;
+  background: #d0b46f;
+}
+
+body[data-theme="moonlight"] .project-preview,
+body[data-theme="moonlight"] .project-mini-preview,
+body[data-theme="moonlight"] .skills-grid span,
+body[data-theme="moonlight"] .projects-more summary {
+  background-color: var(--gd-panel-alt);
+  border-top-color: rgba(139, 154, 162, 0.9);
+  border-bottom-color: rgba(5, 10, 12, 0.95);
+  border-left-color: rgba(139, 154, 162, 0.9);
+  border-right-color: rgba(5, 10, 12, 0.95);
+}
+
+body[data-theme="moonlight"] .project-mini-preview {
+  background:
+    linear-gradient(90deg, rgba(214, 210, 194, 0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(214, 210, 194, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 74% 20%, rgba(223, 196, 125, 0.22), transparent 28%),
+    rgba(36, 48, 52, 0.9);
+  background-size: 12px 12px, 12px 12px, auto, auto;
+}
+
+body[data-theme="moonlight"] .hero-avatar img {
+  filter: saturate(0.78) contrast(1.08);
+}
+
+body[data-theme="moonlight"] .marquee-track span,
+body[data-theme="moonlight"] .project-card .project-stack,
+body[data-theme="moonlight"] .project-card-compact .project-stack,
+body[data-theme="moonlight"] .project-mini-preview,
+body[data-theme="moonlight"] .project-link {
+  color: var(--gd-accent);
+}
+
+body[data-theme="moonlight"] .window::before,
+body[data-theme="moonlight"] .titlebar,
+body[data-theme="moonlight"] legend,
+body[data-theme="moonlight"] .projects-more summary {
+  color: #f0ead6;
 }
 
 @media (max-width: 860px) {
