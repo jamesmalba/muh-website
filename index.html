@@ -148,19 +148,92 @@
         </div>
       </section>
 
-      <section id="projects" class="window reveal" name="Projects">
+      <section id="Projects" class="window reveal" name="Projects">
         <div class="projects-list">
+          <article class="project-card box">
+            <div class="project-info">
+              <p class="project-title">Deadlock Stats API</p>
+              <p class="project-tagline">Spring Boot analytics service for Valve's Deadlock</p>
+              <p>
+                REST service that aggregates match and hero analytics for Deadlock, Valve's upcoming MOBA.
+                Six endpoints over a PostgreSQL backend expose player profiles, paginated match histories,
+                hero meta stats, and a custom Win Probability Added (WPA) metric that tracks how individual
+                objective destructions shift match outcomes.
+              </p>
+              <p>
+                Built with Spring Boot on Java 21 using raw <code>JdbcClient</code> for SQL transparency
+                (explicit bitmask decoding, array unnesting, <code>DISTINCT ON</code>) rather than Hibernate.
+                Flyway migrations, Jakarta Bean Validation, OpenAPI 3 docs, RFC 7807 error responses,
+                structured JSON logs, and Testcontainers-backed PostgreSQL integration tests. Containerized
+                with Docker Compose.
+              </p>
+              <p class="project-stack">Java 21 • Spring Boot • PostgreSQL • Flyway • Docker • Testcontainers</p>
+            </div>
+            <a class="project-preview" href="https://github.com/jamesmalba/deadlock-api" target="_blank" rel="noreferrer">
+              <span class="project-placeholder">Preview</span>
+            </a>
+          </article>
 
           <article class="project-card box">
             <div class="project-info">
-              <p class="project-title">Recipe Roulette</p>
-              <p class="project-tagline">Full-stack recipe management platform</p>
+              <p class="project-title">Time Traveler Debugger</p>
+              <p class="project-tagline">Frame-rewind debugger plugin for Godot</p>
               <p>
-                REST API built with Spring Boot and Spring Data JPA on MySQL. Containerized with Docker, deployed on AWS ECS with CI/CD via GitHub Actions. Next.js + Tailwind frontend with 85%+ test coverage.
+                Editor plugin that snapshots every frame of game state into a circular buffer and lets
+                you scrub backward, inspect any past frame, toggle previously hidden debug draws, and
+                resume gameplay from any chosen moment. Inspired by Kintsugiyama's Alta Debugger for <em>Legend of California</em>.
               </p>
-              <p class="project-stack">Java &bull; Spring Boot &bull; MySQL &bull; Docker &bull; AWS ECS &bull; Next.js</p>
+              <p>
+                Pure GDScript, ~2,400 lines across 22 files. Runtime recorder and floating editor window
+                communicate over Godot's <code>EngineDebugger</code> IPC with a two-tier protocol
+                (lightweight summaries every frame, heavy detail on demand). Captures state via reflection
+                over <code>PROPERTY_USAGE_STORAGE</code> for 1:1 save-game fidelity, respawns freed nodes
+                from their <code>scene_file_path</code>, and includes an adaptive heat-map timeline with
+                event markers and column aggregation.
+              </p>
+              <p class="project-stack">Godot 4.6 • GDScript • EditorPlugin • EngineDebugger IPC • Reflection</p>
+            </div>
+            <a class="project-preview has-image" href="<REPLACE-WITH-YOUR-LINK>" target="_blank" rel="noreferrer">
+              <img src="./assets/time-traveler-preview.gif" alt="Time Traveler timeline scrubbing" loading="lazy" />
+            </a>
+          </article>
+
+          <article class="project-card box">
+            <div class="project-info">
+              <p class="project-title">Daily Cauldron</p>
+              <p class="project-tagline">Full-stack recipe platform</p>
+              <p>
+                Recipe discovery and submission platform with a wizarding-newspaper aesthetic.
+                Browse by difficulty, summon random recipes, submit multi-section forms with dynamic
+                ingredient/step rows, and leave 5-star ratings + written reviews.
+              </p>
+              <p>
+                Spring Boot REST backend on MySQL, containerized with Docker and deployed on AWS ECS
+                with CI/CD via GitHub Actions. Astro frontend with TypeScript, GSAP driven page
+                transitions, session storage caching for fast detail renders, and anonymous-token
+                auth (UUID in localStorage, sent as <code>X-Anonymous-Token</code>) so reviews and
+                ratings work without sign-in friction.
+              </p>
+              <p class="project-stack">Java • Spring Boot • MySQL • Docker • AWS ECS • Astro • TypeScript</p>
             </div>
             <a class="project-preview" href="https://github.com/jamesmalba/recipe-api" target="_blank" rel="noreferrer">
+              <span class="project-placeholder">Preview</span>
+            </a>
+          </article>
+
+        </div>
+        <p class="subsection-label">More projects</p>
+        <div class="projects-list projects-list-compact">
+          <article class="project-card box">
+            <div class="project-info">
+              <p class="project-title">PhantasiaC</p>
+              <p class="project-tagline">EPUB character parser &amp; visualizer</p>
+              <p>
+                C++ system software that extracts and analyzes character data from EPUB books. Uses libzippp and libxml++ for parsing, Ollama with DeepSeek-R1 for NLP-driven recognition, and Boost.Thread for parallelism.
+              </p>
+              <p class="project-stack">C++ &bull; libzippp &bull; Ollama &bull; SQLite &bull; Boost.Thread</p>
+            </div>
+            <a class="project-preview" href="https://github.com/jamesmalba/PhantasiaC" target="_blank" rel="noreferrer">
               <span class="project-placeholder">Preview</span>
             </a>
           </article>
@@ -170,7 +243,7 @@
               <p class="project-title">Tag Sim</p>
               <p class="project-tagline">Dwarf Fortress-inspired survival game</p>
               <p>
-                ASCII grid survival simulator compiled to WebAssembly. Antagonist uses BFS pathfinding while you place temporary walls to survive. Leaderboard API with SQLite backend and deterministic replay.
+                ASCII grid survival simulator compiled to WebAssembly. Antagonist uses BFS pathfinding while the Protagonist places temporary walls to survive as long as possible. Leaderboard API with SQLite backend and deterministic replay.
               </p>
               <p class="project-stack">Rust &bull; WebAssembly &bull; SQLite &bull; HTML/JS</p>
             </div>
@@ -181,7 +254,7 @@
 
           <article class="project-card box">
             <div class="project-info">
-              <p class="project-title">Untaiko Unmastered</p>
+              <p class="project-title">Taiko Unmastered</p>
               <p class="project-tagline">Taiko rhythm game clone</p>
               <p>
                 Rhythm game built in Godot 4.6 with C# scripting. Features custom beatmap system, hit animation windows, keybinding configuration, and a heatmap mode for accuracy tracking.
@@ -209,14 +282,20 @@
 
           <article class="project-card box">
             <div class="project-info">
-              <p class="project-title">PhantasiaC</p>
-              <p class="project-tagline">EPUB character parser &amp; visualizer</p>
+              <p class="project-title">Peloton OCR Bridge</p>
+              <p class="project-tagline">Bridges legacy Peloton metrics to modern fitness apps via OCR and BLE.</p>
               <p>
-                C++ system software that extracts and analyzes character data from EPUB books. Uses libzippp and libxml++ for parsing, Ollama with DeepSeek-R1 for NLP-driven recognition, and Boost.Thread for parallelism.
+                Software-only bridge that streams cadence and power from a Gen 1 Peloton
+                (Android 4.1, no native BLE) into Zwift or Rouvy on the same Mac.
               </p>
-              <p class="project-stack">C++ &bull; libzippp &bull; Ollama &bull; SQLite &bull; Boost.Thread</p>
+              <p>
+                Captures the tablet via <code>adb screencap</code>, OCRs the digits with Tesseract,
+                and rebroadcasts as a BLE Cycling Power + Cadence GATT peripheral via
+                <code>bless</code> / CoreBluetooth.
+              </p>
+              <p class="project-stack">Python &bull; BLE &bull; ADB &bull; Tesseract OCR &bull; asyncio</p>
             </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/PhantasiaC" target="_blank" rel="noreferrer">
+            <a class="project-preview" href="https://github.com/jamesmalba/recipe-api" target="_blank" rel="noreferrer">
               <span class="project-placeholder">Preview</span>
             </a>
           </article>
@@ -235,8 +314,25 @@
             </a>
           </article>
 
+          <article class="project-card box">
+            <div class="project-info">
+              <p class="project-title">70MM IMAX Seat Alert</p>
+              <p class="project-tagline">AMC Seat Alert Notifier</p>
+              <p>
+                Real-time monitoring bot that watches sold-out IMAX 70mm showings at AMC Lincoln Square
+                and pushes a deep-linked notification to my phone when a better seat is released.
+                Polls every 45 seconds, fetches seat maps in parallel, applies an "upgrade-only" filter,
+                and sends a one-tap booking link. Built because AMC's ticketing isn't consumer-friendly.
+              </p>
+              <p class="project-stack">Python &bull; ntfy.sh</p>
+            </div>
+            <a class="project-preview" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer">
+              <span class="project-placeholder">Preview</span>
+            </a>
+          </article>
         </div>
       </section>
+
 
       <section id="experience" class="window reveal" name="Experience">
         <ul class="timeline">

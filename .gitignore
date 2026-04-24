@@ -1,2 +1,4 @@
 resources/
 notes/
+*.tmp
+*.log
