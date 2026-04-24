@@ -148,7 +148,7 @@
         </div>
       </section>
 
-      <section id="Projects" class="window reveal" name="Projects">
+      <section id="projects" class="window reveal" name="Projects">
         <div class="projects-list">
           <article class="project-card box">
             <div class="project-info">
@@ -221,9 +221,6 @@
             </a>
           </article>
 
-        </div>
-        <p class="subsection-label">More projects</p>
-        <div class="projects-list projects-list-compact">
           <article class="project-card box">
             <div class="project-info">
               <p class="project-title">PhantasiaC</p>
@@ -238,99 +235,103 @@
             </a>
           </article>
 
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">Tag Sim</p>
-              <p class="project-tagline">Dwarf Fortress-inspired survival game</p>
-              <p>
-                ASCII grid survival simulator compiled to WebAssembly. Antagonist uses BFS pathfinding while the Protagonist places temporary walls to survive as long as possible. Leaderboard API with SQLite backend and deterministic replay.
-              </p>
-              <p class="project-stack">Rust &bull; WebAssembly &bull; SQLite &bull; HTML/JS</p>
-            </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
-          </article>
-
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">Taiko Unmastered</p>
-              <p class="project-tagline">Taiko rhythm game clone</p>
-              <p>
-                Rhythm game built in Godot 4.6 with C# scripting. Features custom beatmap system, hit animation windows, keybinding configuration, and a heatmap mode for accuracy tracking.
-              </p>
-              <p class="project-stack">Godot 4.6 &bull; C# &bull; GDScript</p>
-            </div>
-            <a class="project-preview has-image" href="https://breadwater.itch.io/taiko-unmastered?secret=lO8IZuxrSe2lGN09Heu9AS7BeI" target="_blank" rel="noreferrer">
-              <img src="./assets/taiko-preview.gif" alt="Untaiko Unmastered gameplay preview" loading="lazy" />
-            </a>
-          </article>
-
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">Practice Studio</p>
-              <p class="project-tagline">Local coding exercise platform</p>
-              <p>
-                Web platform for creating and running coding exercises against test harnesses. Supports Python, Java, C#, and C++ with Monaco Editor, multi-level progression tracks, and real local test execution.
-              </p>
-              <p class="project-stack">Python &bull; Node.js &bull; Monaco Editor &bull; JSON</p>
-            </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/TargetedLearning" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
-          </article>
-
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">Peloton OCR Bridge</p>
-              <p class="project-tagline">Bridges legacy Peloton metrics to modern fitness apps via OCR and BLE.</p>
-              <p>
-                Software-only bridge that streams cadence and power from a Gen 1 Peloton
-                (Android 4.1, no native BLE) into Zwift or Rouvy on the same Mac.
-              </p>
-              <p>
-                Captures the tablet via <code>adb screencap</code>, OCRs the digits with Tesseract,
-                and rebroadcasts as a BLE Cycling Power + Cadence GATT peripheral via
-                <code>bless</code> / CoreBluetooth.
-              </p>
-              <p class="project-stack">Python &bull; BLE &bull; ADB &bull; Tesseract OCR &bull; asyncio</p>
-            </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/recipe-api" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
-          </article>
-
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">Clock Waybar</p>
-              <p class="project-tagline">Custom Waybar clock utility</p>
-              <p>
-                Four-mode Waybar widget: clock, Pomodoro focus timer, countdown, and stopwatch. Built for Hyprland with automated installer that patches configs and window rules. CLI-driven control.
-              </p>
-              <p class="project-stack">Python &bull; Shell &bull; Hyprland &bull; Waybar</p>
-            </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/clock-waybar" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
-          </article>
-
-          <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">70MM IMAX Seat Alert</p>
-              <p class="project-tagline">AMC Seat Alert Notifier</p>
-              <p>
-                Real-time monitoring bot that watches sold-out IMAX 70mm showings at AMC Lincoln Square
-                and pushes a deep-linked notification to my phone when a better seat is released.
-                Polls every 45 seconds, fetches seat maps in parallel, applies an "upgrade-only" filter,
-                and sends a one-tap booking link. Built because AMC's ticketing isn't consumer-friendly.
-              </p>
-              <p class="project-stack">Python &bull; ntfy.sh</p>
-            </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
-          </article>
         </div>
+
+        <details class="projects-more box">
+          <summary>
+            <span>Other projects</span>
+            <span class="projects-more__count">6</span>
+          </summary>
+          <div class="projects-grid-compact">
+            <article class="project-card-compact">
+              <a class="project-mini-preview project-mini-preview--tag" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer" aria-label="Open Tag Sim on GitHub">
+                <span>TAG</span>
+                <span>##..@..##</span>
+                <span>..##..##.</span>
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">Tag Sim</p>
+                <p class="project-tagline">ASCII survival sim in WASM</p>
+                <p>BFS antagonist, wall-placing protagonist, SQLite leaderboard with deterministic replay.</p>
+                <p class="project-stack">Rust • WebAssembly • SQLite</p>
+                <a class="project-link" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer">GitHub →</a>
+              </div>
+            </article>
+
+            <article class="project-card-compact">
+              <a class="project-mini-preview has-image" href="https://breadwater.itch.io/taiko-unmastered?secret=lO8IZuxrSe2lGN09Heu9AS7BeI" target="_blank" rel="noreferrer" aria-label="Play Untaiko Unmastered">
+                <img src="./assets/taiko-preview.gif" alt="Untaiko Unmastered gameplay preview" loading="lazy" />
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">Untaiko Unmastered</p>
+                <p class="project-tagline">Taiko rhythm game clone</p>
+                <p>Custom beatmap system, hit-window tuning, heatmap accuracy tracking in Godot 4.6.</p>
+                <p class="project-stack">Godot • C# • GDScript</p>
+                <a class="project-link" href="https://breadwater.itch.io/taiko-unmastered?secret=lO8IZuxrSe2lGN09Heu9AS7BeI" target="_blank" rel="noreferrer">Play →</a>
+              </div>
+            </article>
+
+            <article class="project-card-compact">
+              <a class="project-mini-preview project-mini-preview--practice" href="https://github.com/jamesmalba/TargetedLearning" target="_blank" rel="noreferrer" aria-label="Open Practice Studio on GitHub">
+                <span>RUN</span>
+                <span>def solve():</span>
+                <span>  pass</span>
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">Practice Studio</p>
+                <p class="project-tagline">Local coding-exercise platform</p>
+                <p>Monaco editor, multi-language test harnesses (Py/Java/C#/C++), progression tracks, real local execution.</p>
+                <p class="project-stack">Python • Node.js • Monaco</p>
+                <a class="project-link" href="https://github.com/jamesmalba/TargetedLearning" target="_blank" rel="noreferrer">GitHub →</a>
+              </div>
+            </article>
+
+            <article class="project-card-compact">
+              <a class="project-mini-preview project-mini-preview--ocr" href="https://github.com/jamesmalba/<PELOTON-REPO>" target="_blank" rel="noreferrer" aria-label="Open Peloton OCR Bridge on GitHub">
+                <span>OCR</span>
+                <span>92 RPM</span>
+                <span>BLE OUT</span>
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">Peloton OCR Bridge</p>
+                <p class="project-tagline">Peloton Gen 1 → Zwift/Rouvy</p>
+                <p>Software-only bridge: captures tablet via ADB, OCRs digits, rebroadcasts as a BLE GATT peripheral.</p>
+                <p class="project-stack">Python • BLE • ADB • Tesseract</p>
+                <a class="project-link" href="https://github.com/jamesmalba/<PELOTON-REPO>" target="_blank" rel="noreferrer">GitHub →</a>
+              </div>
+            </article>
+
+            <article class="project-card-compact">
+              <a class="project-mini-preview project-mini-preview--clock" href="https://github.com/jamesmalba/clock-waybar" target="_blank" rel="noreferrer" aria-label="Open Clock Waybar on GitHub">
+                <span>12:45</span>
+                <span>POMO 22m</span>
+                <span>HYPR</span>
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">Clock Waybar</p>
+                <p class="project-tagline">Hyprland clock utility</p>
+                <p>Four-mode Waybar widget (clock, Pomodoro, countdown, stopwatch) with CLI-driven config patcher.</p>
+                <p class="project-stack">Python • Shell • Hyprland</p>
+                <a class="project-link" href="https://github.com/jamesmalba/clock-waybar" target="_blank" rel="noreferrer">GitHub →</a>
+              </div>
+            </article>
+
+            <article class="project-card-compact">
+              <a class="project-mini-preview project-mini-preview--imax" href="https://github.com/jamesmalba/<70MM-REPO>" target="_blank" rel="noreferrer" aria-label="Open 70mm IMAX Alert on GitHub">
+                <span>70MM</span>
+                <span>A12 A13 A14</span>
+                <span>OPEN</span>
+              </a>
+              <div class="project-compact-info">
+                <p class="project-title">70mm IMAX Alert</p>
+                <p class="project-tagline">AMC seat-release notifier</p>
+                <p>Polls AMC every 45s, diffs seat maps in parallel, pushes a one-tap mobile link when an upgrade opens.</p>
+                <p class="project-stack">Python • ntfy.sh</p>
+                <a class="project-link" href="https://github.com/jamesmalba/<70MM-REPO>" target="_blank" rel="noreferrer">GitHub →</a>
+              </div>
+            </article>
+          </div>
+        </details>
       </section>
 
 

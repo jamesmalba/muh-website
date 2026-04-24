@@ -360,6 +360,209 @@ body[data-theme="newspaper"] .topbar__icon-button:hover {
   letter-spacing: 1px;
 }
 
+.projects-more {
+  margin-top: 10px;
+  margin-bottom: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.projects-more summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin: -10px -10px 10px;
+  color: #fff;
+  background: var(--gd-panel-alt);
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  cursor: pointer;
+  list-style: none;
+}
+
+.projects-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.projects-more summary::before {
+  content: "+";
+  flex: 0 0 auto;
+  width: 14px;
+  color: var(--gd-accent);
+}
+
+.projects-more[open] summary::before {
+  content: "-";
+}
+
+.projects-more:not([open]) summary {
+  margin-bottom: -10px;
+}
+
+.projects-more summary span:first-of-type {
+  margin-right: auto;
+}
+
+.projects-more__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 5px;
+  color: var(--gd-accent);
+  background: var(--gd-panel);
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  border-left: solid 1px var(--gd-border-hi);
+  border-right: solid 1px var(--gd-border-lo);
+  box-sizing: border-box;
+  font-size: 11px;
+}
+
+.projects-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.project-card-compact {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  padding: 8px;
+  background: var(--gd-panel);
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  border-left: solid 1px var(--gd-border-hi);
+  border-right: solid 1px var(--gd-border-lo);
+  box-sizing: border-box;
+}
+
+.project-card-compact p {
+  margin: 0 0 6px;
+}
+
+.project-card-compact .project-title {
+  margin: 0 0 3px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.project-card-compact .project-tagline {
+  margin: 0 0 7px;
+  color: var(--gd-text-dim);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.project-card-compact .project-stack {
+  margin-top: 8px;
+  color: var(--gd-accent);
+  font-size: 12px;
+}
+
+.project-compact-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.project-compact-info .project-link {
+  align-self: flex-start;
+  margin-top: auto;
+  color: var(--gd-link);
+}
+
+.project-mini-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 126px;
+  padding: 10px;
+  color: var(--gd-accent);
+  text-decoration: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    var(--gd-panel-alt);
+  background-size: 12px 12px;
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  border-left: solid 1px var(--gd-border-hi);
+  border-right: solid 1px var(--gd-border-lo);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.project-mini-preview:hover,
+.project-mini-preview:focus-visible {
+  background-color: var(--gd-panel);
+}
+
+.project-mini-preview span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-mini-preview span:first-child {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.project-mini-preview.has-image {
+  padding: 0;
+  background: var(--gd-panel-alt);
+}
+
+.project-mini-preview.has-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 126px;
+  margin: 0;
+  border: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.project-mini-preview--tag::after,
+.project-mini-preview--practice::after,
+.project-mini-preview--ocr::after,
+.project-mini-preview--clock::after,
+.project-mini-preview--imax::after {
+  content: "";
+  position: absolute;
+  inset: auto 10px 10px auto;
+  width: 36px;
+  height: 36px;
+  border-top: solid 1px var(--gd-border-hi);
+  border-bottom: solid 1px var(--gd-border-lo);
+  border-left: solid 1px var(--gd-border-hi);
+  border-right: solid 1px var(--gd-border-lo);
+  background: rgba(0, 0, 0, 0.16);
+}
+
 .timeline {
   margin: 0;
   padding: 0 12px 0 28px;
@@ -601,5 +804,24 @@ body[data-theme="newspaper"] .timeline-head {
   .project-preview {
     width: 100%;
     min-height: 140px;
+  }
+
+  .projects-grid-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card-compact {
+    grid-template-columns: 132px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .project-card-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .project-mini-preview,
+  .project-mini-preview.has-image img {
+    min-height: 150px;
   }
 }
