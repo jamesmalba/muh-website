@@ -8,6 +8,9 @@
   --gd-text-dim: #b8c4ad;
   --gd-accent: #c4b550;
   --gd-link: #b8a040;
+  --font-copy: system-ui, "Segoe UI", Arial, sans-serif;
+  --font-ui: "Trebuchet MS", Verdana, sans-serif;
+  --font-code: Consolas, "Courier New", monospace;
 }
 
 html {
