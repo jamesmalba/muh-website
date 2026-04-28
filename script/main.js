@@ -770,6 +770,29 @@ const initEasterEgg = () => {
   });
 };
 
+const initLightboxes = () => {
+  document.querySelectorAll('.preview-modal-trigger').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dlg = document.getElementById(btn.dataset.modal);
+      if (dlg && typeof dlg.showModal === 'function') {
+        dlg.showModal();
+      }
+    });
+  });
+
+  document.querySelectorAll('dialog.media-modal').forEach((dlg) => {
+    dlg.addEventListener('click', (e) => {
+      const rect = dlg.getBoundingClientRect();
+      const insideContent =
+        e.clientY >= rect.top && e.clientY <= rect.bottom &&
+        e.clientX >= rect.left && e.clientX <= rect.right;
+      if (!insideContent) dlg.close();
+    });
+    const closeBtn = dlg.querySelector('.media-modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', () => dlg.close());
+  });
+};
+
 splitText("[data-split]");
 initThemeToggle();
 initMarquee();
@@ -777,3 +800,4 @@ initAnimations();
 initActiveNav();
 initWindowButtons();
 initEasterEgg();
+initLightboxes();
