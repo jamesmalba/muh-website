@@ -151,88 +151,91 @@
       <section id="projects" class="window reveal" name="Projects">
         <div class="projects-list">
           <article class="project-card box">
-            <div class="project-info">
+            <header class="project-card-header">
               <p class="project-title">Deadlock Stats API</p>
               <p class="project-tagline">Spring Boot analytics service for Valve's Deadlock</p>
-              <p>
-                REST service that aggregates match and hero analytics for Deadlock, Valve's upcoming MOBA.
-                Six endpoints over a PostgreSQL backend expose player profiles, paginated match histories,
-                hero meta stats, and a custom Win Probability Added (WPA) metric that tracks how individual
-                objective destructions shift match outcomes.
-              </p>
-              <p>
-                Built with Spring Boot on Java 21 using raw <code>JdbcClient</code> for SQL transparency
-                (explicit bitmask decoding, array unnesting, <code>DISTINCT ON</code>) rather than Hibernate.
-                Flyway migrations, Jakarta Bean Validation, OpenAPI 3 docs, RFC 7807 error responses,
-                structured JSON logs, and Testcontainers-backed PostgreSQL integration tests. Containerized
-                with Docker Compose.
-              </p>
-              <p class="project-stack">Java 21 • Spring Boot • PostgreSQL • Flyway • Docker • Testcontainers</p>
+            </header>
+            <div class="project-card-body">
+              <div class="project-info">
+                <p>
+                  REST service that aggregates match and hero analytics for Deadlock, Valve's upcoming MOBA.
+                  Six endpoints over a PostgreSQL backend expose player profiles, paginated match histories,
+                  hero meta stats, and a custom Win Probability Added (WPA) metric that tracks how individual
+                  objective destructions shift match outcomes.
+                </p>
+                <p class="project-stack">Java 21 • Spring Boot • PostgreSQL • Flyway • Docker • Testcontainers</p>
+              </div>
+              <button type="button" class="project-preview has-image preview-modal-trigger"
+                      data-modal="deadlock-modal" aria-label="View Deadlock Stats API demo">
+                <img src="./assets/demo%20videos/deadlockdemo.webp"
+                    alt="Deadlock Stats API Swagger UI" loading="lazy" />
+              </button>
             </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/deadlock-api" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
           </article>
 
           <article class="project-card box">
-            <div class="project-info">
+            <header class="project-card-header">
               <p class="project-title">Time Traveler Debugger</p>
               <p class="project-tagline">Frame-rewind debugger plugin for Godot</p>
-              <p>
-                Editor plugin that snapshots every frame of game state into a circular buffer and lets
-                you scrub backward, inspect any past frame, toggle previously hidden debug draws, and
-                resume gameplay from any chosen moment. Inspired by Kintsugiyama's Alta Debugger for <em>Legend of California</em>.
-              </p>
-              <p>
-                Pure GDScript, ~2,400 lines across 22 files. Runtime recorder and floating editor window
-                communicate over Godot's <code>EngineDebugger</code> IPC with a two-tier protocol
-                (lightweight summaries every frame, heavy detail on demand). Captures state via reflection
-                over <code>PROPERTY_USAGE_STORAGE</code> for 1:1 save-game fidelity, respawns freed nodes
-                from their <code>scene_file_path</code>, and includes an adaptive heat-map timeline with
-                event markers and column aggregation.
-              </p>
-              <p class="project-stack">Godot 4.6 • GDScript • EditorPlugin • EngineDebugger IPC • Reflection</p>
+            </header>
+            <div class="project-card-body">
+              <div class="project-info">
+                <p>
+                  Editor plugin that snapshots every frame of game state into a circular buffer and lets
+                  you scrub backward, inspect any past frame, toggle previously hidden debug draws, and
+                  resume gameplay from any chosen moment. Inspired by Kintsugiyama's Alta Debugger for <em>Legend of California</em>.
+                </p>
+                <p class="project-stack">Godot 4.6 • GDScript • EditorPlugin • EngineDebugger IPC • Reflection</p>
+              </div>
+              <button type="button" class="project-preview has-image preview-modal-trigger"
+                      data-modal="tt-modal" aria-label="View Time Traveler demo">
+                <img src="./assets/demo%20videos/ttdebugdemo.webp"
+                    alt="Time Traveler timeline scrubbing" loading="lazy" />
+              </button>
             </div>
-            <a class="project-preview has-image" href="<REPLACE-WITH-YOUR-LINK>" target="_blank" rel="noreferrer">
-              <img src="./assets/time-traveler-preview.gif" alt="Time Traveler timeline scrubbing" loading="lazy" />
-            </a>
           </article>
 
           <article class="project-card box">
-            <div class="project-info">
+            <header class="project-card-header">
               <p class="project-title">Daily Cauldron</p>
               <p class="project-tagline">Full-stack recipe platform</p>
-              <p>
-                Recipe discovery and submission platform with a wizarding-newspaper aesthetic.
-                Browse by difficulty, summon random recipes, submit multi-section forms with dynamic
-                ingredient/step rows, and leave 5-star ratings + written reviews.
-              </p>
-              <p>
-                Spring Boot REST backend on MySQL, containerized with Docker and deployed on AWS ECS
-                with CI/CD via GitHub Actions. Astro frontend with TypeScript, GSAP driven page
-                transitions, session storage caching for fast detail renders, and anonymous-token
-                auth (UUID in localStorage, sent as <code>X-Anonymous-Token</code>) so reviews and
-                ratings work without sign-in friction.
-              </p>
-              <p class="project-stack">Java • Spring Boot • MySQL • Docker • AWS ECS • Astro • TypeScript</p>
+            </header>
+            <div class="project-card-body">
+              <div class="project-info">
+                <p>
+                  Recipe discovery and submission with a wizarding-newspaper aesthetic.
+                  Browse by difficulty, summon random recipes, submit multi-section forms,
+                  and leave 5-star ratings + reviews.
+                </p>
+                <p class="project-stack">Java • Spring Boot • MySQL • Docker • AWS ECS • Astro • TypeScript</p>
+              </div>
+              <button type="button" class="project-preview has-image preview-modal-trigger"
+                      data-modal="cauldron-modal" aria-label="View Daily Cauldron demo">
+                <img src="./assets/demo%20videos/cauldrondemo.webp"
+                    alt="Daily Cauldron recipe browsing" loading="lazy" />
+              </button>
+              
             </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/recipe-api" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
           </article>
 
           <article class="project-card box">
-            <div class="project-info">
-              <p class="project-title">PhantasiaC</p>
+            <header class="project-card-header">
+              <p class="project-title">Phantasia</p>
               <p class="project-tagline">EPUB character parser &amp; visualizer</p>
-              <p>
-                C++ system software that extracts and analyzes character data from EPUB books. Uses libzippp and libxml++ for parsing, Ollama with DeepSeek-R1 for NLP-driven recognition, and Boost.Thread for parallelism.
-              </p>
-              <p class="project-stack">C++ &bull; libzippp &bull; Ollama &bull; SQLite &bull; Boost.Thread</p>
+            </header>
+            <div class="project-card-body">
+              <div class="project-info">
+                <p>
+                  C++ system software that extracts and analyzes character data from EPUB books. Uses libzippp and libxml++ for parsing, Ollama with DeepSeek-R1 for NLP-driven recognition, and Boost.Thread for parallelism.
+                </p>
+                <p class="project-stack">C++ &bull; libzippp &bull; Ollama &bull; SQLite &bull; Boost.Thread</p>
+              </div>
+              <button type="button" class="project-preview has-image preview-modal-trigger"
+                      data-modal="phantasia-modal" aria-label="View Phantasia demo">
+                <img src="./assets/demo%20videos/mindC.webp"
+                    alt="Phantasia Character Parser" loading="lazy" />
+              </button>
             </div>
-            <a class="project-preview" href="https://github.com/jamesmalba/PhantasiaC" target="_blank" rel="noreferrer">
-              <span class="project-placeholder">Preview</span>
-            </a>
           </article>
 
         </div>
@@ -254,13 +257,12 @@
                 <p class="project-tagline">ASCII survival sim in WASM</p>
                 <p>BFS antagonist, wall-placing protagonist, SQLite leaderboard with deterministic replay.</p>
                 <p class="project-stack">Rust • WebAssembly • SQLite</p>
-                <a class="project-link" href="https://github.com/jamesmalba/tag-sim" target="_blank" rel="noreferrer">GitHub →</a>
               </div>
             </article>
 
             <article class="project-card-compact">
               <a class="project-mini-preview has-image" href="https://breadwater.itch.io/taiko-unmastered?secret=lO8IZuxrSe2lGN09Heu9AS7BeI" target="_blank" rel="noreferrer" aria-label="Play Untaiko Unmastered">
-                <img src="./assets/taiko-preview.gif" alt="Untaiko Unmastered gameplay preview" loading="lazy" />
+                <img src="./assets/demo videos/taikodemo.webp" alt="Untaiko Unmastered gameplay preview" loading="lazy" />
               </a>
               <div class="project-compact-info">
                 <p class="project-title">Untaiko Unmastered</p>
@@ -282,7 +284,6 @@
                 <p class="project-tagline">Local coding-exercise platform</p>
                 <p>Monaco editor, multi-language test harnesses (Py/Java/C#/C++), progression tracks, real local execution.</p>
                 <p class="project-stack">Python • Node.js • Monaco</p>
-                <a class="project-link" href="https://github.com/jamesmalba/TargetedLearning" target="_blank" rel="noreferrer">GitHub →</a>
               </div>
             </article>
 
@@ -297,7 +298,6 @@
                 <p class="project-tagline">Peloton Gen 1 → Zwift/Rouvy</p>
                 <p>Software-only bridge: captures tablet via ADB, OCRs digits, rebroadcasts as a BLE GATT peripheral.</p>
                 <p class="project-stack">Python • BLE • ADB • Tesseract</p>
-                <a class="project-link" href="https://github.com/jamesmalba/<PELOTON-REPO>" target="_blank" rel="noreferrer">GitHub →</a>
               </div>
             </article>
 
@@ -312,7 +312,6 @@
                 <p class="project-tagline">Hyprland clock utility</p>
                 <p>Four-mode Waybar widget (clock, Pomodoro, countdown, stopwatch) with CLI-driven config patcher.</p>
                 <p class="project-stack">Python • Shell • Hyprland</p>
-                <a class="project-link" href="https://github.com/jamesmalba/clock-waybar" target="_blank" rel="noreferrer">GitHub →</a>
               </div>
             </article>
 
@@ -327,7 +326,6 @@
                 <p class="project-tagline">AMC seat-release notifier</p>
                 <p>Polls AMC every 45s, diffs seat maps in parallel, pushes a one-tap mobile link when an upgrade opens.</p>
                 <p class="project-stack">Python • ntfy.sh</p>
-                <a class="project-link" href="https://github.com/jamesmalba/<70MM-REPO>" target="_blank" rel="noreferrer">GitHub →</a>
               </div>
             </article>
           </div>
@@ -338,15 +336,15 @@
       <section id="experience" class="window reveal" name="Experience">
         <ul class="timeline">
           <li>
-            <p class="timeline-head">Revature &middot; Java Backend Training &middot; Jan &ndash; May 2025</p>
+            <p class="timeline-head">Revature &middot; Java Backend Training &middot; Jan &ndash; April 2025</p>
             <p>
-              Pre-training program for Java development covering Spring Boot, JPA, Hibernate, Git, and Agile. Worked with JUnit, Mockito, MySQL, RESTful APIs, and MVC architecture.
+              Java backend training built around shipping a production-style social media REST API with Spring Boot &mdash; 8+ endpoints for auth, messaging, and account management on a Controller-Service-Repository architecture with JPA/Hibernate. Designed the relational schema, wrote complex SQL with JOINs, and covered the codebase with JUnit and Mockito tests to 90%+.
             </p>
           </li>
           <li>
             <p class="timeline-head">Bristol Myers Squibb &middot; SWE Intern &middot; Jun &ndash; Aug 2023</p>
             <p>
-              Engineered full-stack financial analytics platform with React and HANA SQL processing millions of records. Architected RESTful data integration with sub-second query performance. Built automated QA system reducing manual effort by 60%.
+              Built a full-stack financial analytics platform on React and HANA SQL for 50+ commercial analysts to explore real-time KPIs across 8+ dimensions on million-row datasets. Wrote the REST data integration layer with complex SQL (JOINs, CTEs, window functions) tuned for sub-second queries.
             </p>
           </li>
           <li>
@@ -370,5 +368,21 @@
         </div>
       </section>
     </main>
+    <dialog id="tt-modal" class="media-modal">
+      <button class="media-modal-close" type="button" aria-label="Close">×</button>
+      <img src="./assets/demo%20videos/ttdebugdemo.webp" alt="Time Traveler timeline scrubbing" />
+    </dialog>
+    <dialog id="cauldron-modal" class="media-modal">
+      <button class="media-modal-close" type="button" aria-label="Close">×</button>
+      <img src="./assets/demo%20videos/cauldrondemo.webp" alt="Daily Cauldron recipe browsing" />
+    </dialog>
+    <dialog id="deadlock-modal" class="media-modal">
+      <button class="media-modal-close" type="button" aria-label="Close">×</button>
+      <img src="./assets/demo%20videos/deadlockdemo.webp" alt="Deadlock Stats API Swagger UI" />
+    </dialog>
+    <dialog id="phantasia-modal" class="media-modal">
+      <button class="media-modal-close" type="button" aria-label="Close">×</button>
+      <img src="./assets/demo%20videos/mindC.webp" alt="Phantasia Character Parser" />
+    </dialog>
   </body>
 </html>
