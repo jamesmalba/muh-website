@@ -127,13 +127,13 @@ const initBgCanvas = () => {
     a[2] + (b[2] - a[2]) * t,
   ];
 
-  const getThemeColors = () => {
-    const theme = body.dataset.theme;
-    if (theme === "black") return [hexToRgb("#F0B43F"), hexToRgb("#E08830"), hexToRgb("#D4A040"), hexToRgb("#C87020")];
-    if (theme === "moonlight") return [hexToRgb("#d9d1b3"), hexToRgb("#87909b"), hexToRgb("#c0a56d"), hexToRgb("#4f6574")];
-    if (theme === "newspaper") return [hexToRgb("#bdbdbd"), hexToRgb("#9e9e9e"), hexToRgb("#aaa8a3"), hexToRgb("#8a8680")];
-    return [hexToRgb("#c4b550"), hexToRgb("#8a9a3e"), hexToRgb("#a0a848"), hexToRgb("#7d8a30")];
+  const THEME_PALETTES = {
+    black: [hexToRgb("#F0B43F"), hexToRgb("#E08830"), hexToRgb("#D4A040"), hexToRgb("#C87020")],
+    moonlight: [hexToRgb("#d9d1b3"), hexToRgb("#87909b"), hexToRgb("#c0a56d"), hexToRgb("#4f6574")],
+    green: [hexToRgb("#c4b550"), hexToRgb("#8a9a3e"), hexToRgb("#a0a848"), hexToRgb("#7d8a30")],
   };
+  let cachedColors = THEME_PALETTES[body.dataset.theme] || THEME_PALETTES.green;
+  let cachedTheme = body.dataset.theme;
 
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -265,18 +265,16 @@ const initThemeToggle = () => {
   const themeStylesheet = document.querySelector("#themeStylesheet");
   if (!themeToggle || !themeStylesheet) return;
 
-  const THEMES = ["green", "moonlight", "newspaper", "black"];
+  const THEMES = ["moonlight", "green", "black"];
   const THEME_CSS = {
     moonlight: "./styles/greensteam/greensteam.css",
-    newspaper: "./styles/newspaper/newspaper.css",
-    black: "./styles/blacksteam/blacksteam.css",
     green: "./styles/greensteam/greensteam.css",
+    black: "./styles/blacksteam/blacksteam.css",
   };
   const THEME_LABELS = {
-    green: "Switch to moonlight theme",
-    moonlight: "Switch to white theme",
-    newspaper: "Switch to dark theme",
-    black: "Switch to green theme",
+    moonlight: "Switch to green theme",
+    green: "Switch to dark theme",
+    black: "Switch to moonlight theme",
   };
 
   const stored = localStorage.getItem("portfolio-theme");
