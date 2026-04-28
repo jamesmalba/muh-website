@@ -74,7 +74,6 @@ const initBgCanvas = () => {
   };
 
   const easeOut = (t) => 1 - (1 - t) * (1 - t);
-  const easeIn = (t) => t * t * t;
 
   const step = () => {
     for (let y = 0; y < rows; y++) {
@@ -137,8 +136,11 @@ const initBgCanvas = () => {
 
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const colors = getThemeColors();
-    // mouse glow radius
+    if (body.dataset.theme !== cachedTheme) {
+      cachedTheme = body.dataset.theme;
+      cachedColors = THEME_PALETTES[cachedTheme] || THEME_PALETTES.green;
+    }
+    const colors = cachedColors;
     const driftX = Math.sin(time * 0.0003) * 4;
     const driftY = Math.cos(time * 0.0002) * 3;
     const MOUSE_R = 120;
@@ -214,9 +216,16 @@ const initBgCanvas = () => {
 
   let frameCount = 0;
   let spawnTimer = 0;
+  let lastPaint = 0;
+  const FRAME_MS = 1000 / 30;
 
   const loop = (ts) => {
     time = ts || 0;
+    if (time - lastPaint < FRAME_MS) {
+      requestAnimationFrame(loop);
+      return;
+    }
+    lastPaint = time;
     frameCount++;
     if (frameCount % 6 === 0) {
       step();
@@ -279,15 +288,15 @@ const initThemeToggle = () => {
 
   const stored = localStorage.getItem("portfolio-theme");
   const setTheme = (theme) => {
-    if (!THEMES.includes(theme)) theme = "green";
+    if (!THEMES.includes(theme)) theme = "moonlight";
     themeStylesheet.setAttribute("href", THEME_CSS[theme]);
     body.dataset.theme = theme;
-    themeToggle.setAttribute("aria-pressed", String(theme !== "green"));
+    themeToggle.setAttribute("aria-pressed", String(theme !== "moonlight"));
     themeToggle.setAttribute("aria-label", THEME_LABELS[theme]);
     localStorage.setItem("portfolio-theme", theme);
   };
 
-  setTheme(THEMES.includes(stored) ? stored : "green");
+  setTheme(THEMES.includes(stored) ? stored : "moonlight");
 
   themeToggle.addEventListener("click", () => {
     const current = body.dataset.theme;
